@@ -142,15 +142,15 @@ class Participant(db.Model):
     #: User's email address
     email = db.Column(db.Unicode(80), nullable=False)
     #: Edition of the event they'd like to attend
-    edition = db.Column(db.Unicode(80), nullable=False)
+    # edition = db.Column(db.Unicode(80), nullable=False)
     #: User's company name
     company = db.Column(db.Unicode(80), nullable=False)
     #: User's job title
-    jobtitle = db.Column(db.Unicode(80), nullable=False)
+    jobtitle = db.Column(db.Unicode(80), nullable=True)
     #: User's twitter id (optional)
     twitter = db.Column(db.Unicode(80), nullable=True)
     #: T-shirt size (XS, S, M, L, XL, XXL, XXXL)
-    tshirtsize = db.Column(db.Integer, nullable=False, default=0)
+    tshirtsize = db.Column(db.Integer, nullable=True, default=0)
     #: How did the user hear about this event?
     referrer = db.Column(db.Integer, nullable=False, default=0)
     #: User's reason for wanting to attend
@@ -227,23 +227,11 @@ class User(db.Model):
 class RegisterForm(Form):
     fullname = TextField('Full name', validators=[Required()])
     email = TextField('Email address', validators=[Required(), Email()])
-    edition = SelectField('Edition', validators=[Required()], choices=USER_CITIES)
     company = TextField('Company name (or school/college)', validators=[Required()])
-    jobtitle = TextField('Job title', validators=[Required()])
+    jobtitle = TextField('Job title', validators=[])
     twitter = TextField('Twitter id (optional)')
-    tshirtsize = SelectField('T-shirt size', validators=[Required()], choices=TSHIRT_SIZES)
     referrer = SelectField('How did you hear about this event?', validators=[Required()], choices=REFERRERS)
     reason = TextAreaField('Your reasons for attending', validators=[Required()])
-
-    def validate_edition(self, field):
-        if hasattr(self, '_venuereg'):
-            if field.data != self._venuereg:
-                raise ValidationError, "You can't register for that"
-            else:
-                return # Register at venue even if public reg is closed
-        if field.data in [u'bangalore', u'chennai', u'pune', u'hyderabad']:
-            raise ValidationError, "Registrations are closed for this edition"
-
 
 class AccessKeyForm(Form):
     key = PasswordField('Access Key', validators=[Required()])
