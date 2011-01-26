@@ -231,7 +231,7 @@ class RegisterForm(Form):
     jobtitle = TextField('Job title', validators=[])
     twitter = TextField('Twitter id (optional)')
     referrer = SelectField('How did you hear about this event?', validators=[Required()], choices=REFERRERS)
-    reason = TextAreaField('Your reasons for attending', validators=[Required()])
+    reason = TextAreaField('Reasons we should pick you', validators=[Required()], default="Specifics would be good!", )
 
 class AccessKeyForm(Form):
     key = PasswordField('Access Key', validators=[Required()])
